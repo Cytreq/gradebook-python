@@ -69,3 +69,29 @@ def delete_subject(student, subject):
     removed_subject = students[student].pop(subject)
     print(f"Deleted {subject} from {student}'s profile")
 
+def calculate_subject_GPA(student, subject):
+    try:
+        grades = students[student][subject]
+        if not grades:
+            return None 
+        return sum(grades) / len(grades)
+    except KeyError:
+        return None
+
+    
+def calculate_student_GPA(student):
+    if student not in students:
+        return None
+    count = 0 
+    sum_of_subjects = 0
+    for subject in students[student]:
+        subject_GPA = calculate_subject_GPA(student, subject)
+        if subject_GPA is not None:
+            count += 1
+            sum_of_subjects += subject_GPA
+    if count == 0:
+        return None
+    return sum_of_subjects / count
+
+
+# this code need some refactoring 
