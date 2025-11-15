@@ -4,57 +4,69 @@ students = {"Cyprian" :
             "Lena" : 
             {"Matematyka" : []}
             }
+def check_student(student):
+    if student not in students:
+        return False
+    return True
 
+def check_subject(student, subject):
+    if not check_student(student):
+        return False
+    if subject not in students[student]:
+        return False
+    return True
 
 def add_student(student):
-    if student not in students:
+    if not check_student(student):
         students[student] = {}
-    else:
-        print("This student already exists")
+        return True
+    print("This student already exists")
+    return False
 
 def add_subject(student, subject):
-    if student not in students:
-        print("This student doesn't exist")
-        return None
-    if subject in students[student]:
+    if check_subject(student, subject):
         print("This subject already exists")
-        return None
+        return False
     students[student][subject] = []
+    return True
 
 def add_grade(student, subject, grade):
-    if student not in students:
+    if not check_student(student):
         print("Student doesn't exist ")
-        return None
-    elif subject not in students[student]:
+        return False
+    if not check_subject(student, subject):
         print("Subject doesn't exist")
-        return None
+        return False
+    print("Grade added successfully")
     students[student][subject].append(grade)
 
 def print_grades(student, subject):
-    if student not in students:
-        return None
-    elif subject not in students[student]:
-        return None 
+    if not check_student(student):
+        return False
+    if not check_subject(student, subject):
+        return False
     elif not students[student][subject]:
         print(f"{student} doesn't have any grades.")
-        return None
+        return False
     print(f"{student} have {students[student][subject]} in {subject}")
+    return True
 
 def main():
     while True: 
         ...
 
 def delete_student(student):
-    if student not in students:
+    if not check_student(student):
         print("Student not found")
-    else:
-        del students[student]
+        return False
+    del students[student]
+    return True
 
 def delete_latest_grade(student, subject):
-    if student not in students:
-        return None
-    elif subject not in students[student]:
-        return None
+    if not check_student(student):
+        return False
+    if check_subject(student, subject):
+        return False
     elif not students[student][subject]:
         print("Student doesn't have any grades")
         return None
@@ -62,26 +74,27 @@ def delete_latest_grade(student, subject):
     print(f"Removed {removed_grade} from {student}'s {subject}")
 
 def delete_subject(student, subject):
-    if student not in students:
-        return None 
-    elif subject not in students[student]:
-        return None
+    if not check_student(student):
+        return False
+    if not check_subject(student, subject):
+        return False
     removed_subject = students[student].pop(subject)
     print(f"Deleted {subject} from {student}'s profile")
+    return True
 
 def calculate_subject_GPA(student, subject):
     try:
         grades = students[student][subject]
         if not grades:
-            return None 
+            return False
         return sum(grades) / len(grades)
     except KeyError:
-        return None
+        return False
 
     
 def calculate_student_GPA(student):
-    if student not in students:
-        return None
+    if not check_student(student):
+        return False
     count = 0 
     sum_of_subjects = 0
     for subject in students[student]:
@@ -92,6 +105,3 @@ def calculate_student_GPA(student):
     if count == 0:
         return None
     return sum_of_subjects / count
-
-
-# this code need some refactoring 
